@@ -1,0 +1,80 @@
+			Last revised 20-Jul-16
+
+			    Problem Set 4
+
+		 Harvard Extension School CSCI E-95:
+	    Compiler Design and Implementation - Fall 2016
+
+		  Due: Midnight on October 30, 2016
+
+1. (100 Points) Based on all the work you have completed so far, your
+lexer from Problem Set 1, your parser from Problem Set 2, and your
+symbol table management system from Problem Set 3, develop code to
+perform semantic analysis.  That is, your code should walk over the
+abstract syntax tree (AST) and perform type checking of the entire
+program by refering to the symbol table.
+
+After the entire AST and symbol table have been created as per Problem
+Set 3, your program will perform type checking of every expression in
+the program being compiled.  All appropriate conversions need to be
+applied (usual casting conversions, usual assignment conversions,
+usual unary conversions, usual binary conversions, etc.).  As each
+conversion is applied, any implicit type conversion that was present
+in the original program must be made explicit by adding appropriate
+cast operator nodes into the AST.  The type checking should include
+validity of references to identifiers such as appropriateness of
+expressions used as lvalues, compatibility for all operators,
+compatibility of actual function arguments to formal function
+parameters, propagation of function return type to utilization of the
+function's return value in an expression.  Remember to appropriately
+check for no arguments and no return values for functions.
+
+Any errors you detect during type checking should be flagged with
+emitted error messages.  These include parameter mismatches, return
+type mismatches.  If the types of actual parameters to functions are
+not *identical* but are compatible with the formal parameters, your
+compiler should add appropriate cast nodes into the AST to explicitly
+perform those type conversions.  These might include conversion from
+char to short, short to int, int to long, signed to unsigned, etc.  In
+all cases, if the applied conversions do not result in an expression
+with valid types, an error must be emitted.  You should update your
+pretty printer to dump the additional explicit type conversion nodes
+in the parse tree.
+
+There is one category of type conversion that would result in an
+invalid program if cast operators were simply added to the AST.  These
+cases occur in the C language where an operator uses an operand as
+both a source and a destination yet evaluates that operand only once.
+This occurs with the ++ and -- operators and also with all of the
+compound assignment operators (*=, /=, %=, +=, -=, <<=, >>=, &=, ^=,
+and |=) (see Harbison & Steele, Section 7.9.2).  The operand of ++ and
+-- has the usual binary conversion applied to it (see Harbison &
+Steele, Sections 7.4.4 & 7.5.8).  That conversion would add a cast to
+convert a short int into an int in the AST when applied to the
+expression ++si where si is a short int.  That conversion would result
+in an AST that would represent ++(int)si.  Because the result of a
+cast conversion is never an lvalue and because ++ and -- require their
+operand to be an lvalue, an error would be output if ++(int)si (the
+output of the pretty printer) were compiled.  Therefore, please tag
+any cast added to the operand of ++ or -- with an indication that it
+will be pretty-printed as a comment.  Thus, ++si would be
+pretty-printed as ++/*(int)*/si after this problem set.
+
+Similarly, the compound assignment operators will apply "usual
+conversions" to their left-hand-side (lhs) when treating it as an
+rvalue operand.  Any implied cast that would be needed on the rvalue
+of the lhs operand should be represented as an explicit cast applied
+to the lhs of the compound assignment operator.  Any such cast should
+also be tagged with an indication that it will be pretty-printed as a
+comment.  Because casts can never appear on the lhs of an assignment
+operator, the later stages of our compiler will know that a cast of
+the lhs of a compound assignment operator was added in the type
+checking phase and should be applied to the lhs operand when being
+used as a rvalue operand.  So, c += i where c is a char and i is an
+int, would emerge from type checking as /*(int)*/c += i.
+
+As always, the solution that you turn in should include a
+demonstration that your program works and has been tested.  Thus, the
+test programs you use as input and the output that your compiler
+produces should be included with your other files.  Continue to use
+"git" to turn in your completed work.

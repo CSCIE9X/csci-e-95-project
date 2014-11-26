@@ -1,0 +1,62 @@
+			  Questionnaire for
+
+		 Harvard Extension School CSCI E-95:
+		  Compiler Design and Implementation
+
+			      Fall 2016
+
+
+Name:				Work phone number:
+
+
+E-mail:				Home phone number:
+
+
+Occupation:
+
+	If you're a full-time student, what is your department, field, and
+	    year and at which school?  Are you currently in a degree program?
+
+
+Have you taken CSCI E-10a (Formerly E-50a), CSCI E-10b (Formerly E-50b),
+CSCI E-50 (Formerly E-52), and/or CSCI E-28 (Unix Systems Programming)
+(Formerly CSCI E-215) or equivalents (specify which)?
+
+
+Have you taken CSCI E-22 (Data Structures) (Formerly CSCI E-119)?
+
+	If not, how do you meet the prerequisite?
+
+
+Have you taken CSCI E-124 (Data Structures and Algorithms)?
+
+	If not, how do you meet the prerequisite?
+
+
+Are you already registered for this class?  -- If not, do you intend
+to register?
+
+
+What additional appropriate course or work experience do you have?
+
+
+What is your math background?
+
+
+What computer languages do you know (please include assembler and
+high-level languages)?
+
+
+What operating systems have you used?
+
+
+What computers have you used?
+
+
+Why are you taking the course?
+
+
+If the class needs to be rescheduled, is Thursday evening acceptable?
+
+
+Other comments (please continue on the back):

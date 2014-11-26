@@ -1,0 +1,11 @@
+*.o
+*.a
+*.exe
+*.s
+*.output
+*.yy.[ch]
+*.tab.[ch]
+.depend
+*~
+compiler
+
