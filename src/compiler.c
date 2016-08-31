@@ -32,6 +32,18 @@ static void print_errors_from_pass(char *pass, int error_count) {
           pass, error_count, (error_count == 1 ? "error" : "errors"));
 }
 
+/**
+ * Launches the compiler.
+ * 
+ * The following describes the arguments to the program:
+ * compiler [-s (scanner|parser|symbol|type|ir|mips)] [-o outputfile] [inputfile|stdin]
+ *
+ * -s : the name of the stage to stop after. Defaults to
+ *      runs all of the stages.
+ * -o : the name of the output file. Defaults to "output.s"      
+ *
+ * You should pass the name of the file to process or redirect stdin.
+ */
 int main(int argc, char **argv) {
   FILE *output;
   struct symbol_table symbol_table;
@@ -111,7 +123,7 @@ int main(int argc, char **argv) {
   }
   fprintf(stdout, "=============== PARSE TREE ===============\n");
   node_print_statement_list(stdout, parse_tree);
-  if (0 == strcmp("parser", stage)) {
+  if (0 == strcmp("type", stage)) {
     return 0;
   }
 
