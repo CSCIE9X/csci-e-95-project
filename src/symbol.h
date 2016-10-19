@@ -7,9 +7,12 @@
 struct node;
 struct type;
 
+unsigned int nextSymbolId;
+
 struct symbol {
   char name[IDENTIFIER_MAX + 1];
   struct result result;
+  unsigned int id;
 };
 
 struct symbol_list {

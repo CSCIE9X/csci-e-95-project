@@ -171,8 +171,12 @@ static void node_print_number(FILE *output, struct node *number) {
 static void node_print_identifier(FILE *output, struct node *identifier) {
   assert(NODE_IDENTIFIER == identifier->kind);
 
-  fprintf(output, "%s /* %p */", identifier->data.identifier.name,
-                                 (void *)identifier->data.identifier.symbol);
+  if (identifier->data.identifier.symbol) {
+    fprintf(output, "%s /* %u */", identifier->data.identifier.name,
+            identifier->data.identifier.symbol->id);
+  } else {
+    fprintf(output, "%s", identifier->data.identifier.name);
+  }
 }
 
 static void node_print_expression(FILE *output, struct node *expression) {
