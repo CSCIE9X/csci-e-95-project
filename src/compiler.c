@@ -97,7 +97,6 @@ int main(int argc, char **argv) {
   }
 
   if (0 == strcmp("parser", stage)) {
-    fprintf(stdout, "=============== PARSE TREE ===============\n");
     node_print_statement_list(stdout, parse_tree);
     return 0;
   }

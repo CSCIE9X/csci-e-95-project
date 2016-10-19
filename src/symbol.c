@@ -33,6 +33,7 @@ static struct symbol *symbol_put(struct symbol_table *table, char name[]) {
   strncpy(symbol_list->symbol.name, name, IDENTIFIER_MAX);
   symbol_list->symbol.result.type = NULL;
   symbol_list->symbol.result.ir_operand = NULL;
+  symbol_list->symbol.id = nextSymbolId++;
 
   symbol_list->next = table->variables;
   table->variables = symbol_list;
@@ -127,7 +128,7 @@ void symbol_print_table(FILE *output, struct symbol_table *table) {
   fputs("symbol table:\n", output);
 
   for (iter = table->variables; NULL != iter; iter = iter->next) {
-    fprintf(output, "  variable: %s /* %p */\n", iter->symbol.name, (void *)&iter->symbol);
+    fprintf(output, "  variable: %s /* %u */\n", iter->symbol.name, iter->symbol.id);
   }
   fputs("\n", output);
 }

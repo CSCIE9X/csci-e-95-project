@@ -1,0 +1,6 @@
+loc = 0001:0001-0001:0001     text = a                        token = [IDENTIFIER          ]     name = a
+loc = 0001:0003-0001:0003     text = b                        token = [IDENTIFIER          ]     name = b
+loc = 0001:0005-0001:0005     text = c                        token = [IDENTIFIER          ]     name = c
+loc = 0001:0007-0001:0007     text = d                        token = [IDENTIFIER          ]     name = d
+loc = 0002:0001-0002:0003     text = abc                      token = [IDENTIFIER          ]     name = abc
+loc = 0003:0001-0003:0003     text = def                      token = [IDENTIFIER          ]     name = def

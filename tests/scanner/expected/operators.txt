@@ -1,0 +1,8 @@
+loc = 0001:0001-0001:0001     text = *                        token = [ASTERISK            ]
+loc = 0001:0003-0001:0003     text = +                        token = [PLUS                ]
+loc = 0001:0005-0001:0005     text = -                        token = [MINUS               ]
+loc = 0001:0007-0001:0007     text = /                        token = [SLASH               ]
+loc = 0001:0009-0001:0009     text = =                        token = [EQUAL               ]
+loc = 0001:0011-0001:0011     text = (                        token = [LEFT_PAREN          ]
+loc = 0001:0013-0001:0013     text = )                        token = [RIGHT_PAREN         ]
+loc = 0001:0015-0001:0015     text = ;                        token = [SEMICOLON           ]
