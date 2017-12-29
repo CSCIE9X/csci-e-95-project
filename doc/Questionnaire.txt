@@ -3,7 +3,7 @@
 		 Harvard Extension School CSCI E-95:
 		  Compiler Design and Implementation
 
-			      Fall 2016
+			      Spring 2018
 
 
 Name:				Work phone number:

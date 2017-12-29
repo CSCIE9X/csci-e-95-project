@@ -1,0 +1,11 @@
+sudo: false
+script:
+        - cd src
+        - make
+        - cd ../tests
+        - ./runTests.sh
+language: c
+compiler: gcc
+before_install:
+    - sudo apt-get -qq update
+    - sudo apt-get install -y flex bison
