@@ -1,1 +1,7 @@
+*.exe
+*.o
+*.sw?
+.DS_Store
 .idea
+tests/error.log
+tmp/
