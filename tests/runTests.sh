@@ -16,7 +16,7 @@ for dir in $TEST_DIRS
     # The expected output files
     EXPECTED_FILES_PATH="$PROJECT_ROOT/tests/$dir/expected"
     # Command to invoke the compiler
-    COMPILER_EXEC="$PROJECT_ROOT/src/compiler -s $dir"
+    COMPILER_EXEC="$PROJECT_ROOT/src/compiler/compiler -s $dir"
     # ---------------------------------------------------------
 
     # ---------------------------------------------------------

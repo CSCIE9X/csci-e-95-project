@@ -1,8 +1,8 @@
 sudo: false
 script:
-        - cd src
+        - cd src/compiler
         - make
-        - cd ../tests
+        - cd ../../tests
         - ./runTests.sh
 language: c
 compiler: gcc

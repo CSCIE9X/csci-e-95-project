@@ -1,0 +1,1 @@
+all: fix-this-program
