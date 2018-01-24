@@ -1,40 +1,87 @@
-			  Questionnaire for
+			    Questionnaire
 
 		 Harvard Extension School CSCI E-95:
 		  Compiler Design and Implementation
 
-			      Spring 2018
+			     Spring 2018
 
 
-Name:				Work phone number:
+Name:				Home phone number:
+				Cellular phone number:
+E-mail:				Work phone number:
 
 
-E-mail:				Home phone number:
+Where are you located?  What is your time zone?
 
 
-Occupation:
-
-	If you're a full-time student, what is your department, field, and
-	    year and at which school?  Are you currently in a degree program?
+So that we can meet on-line, what is your Skype name and/or your
+Google Hangouts name?  And, which do you prefer to use?
 
 
-Have you taken CSCI E-10a (Formerly E-50a), CSCI E-10b (Formerly E-50b),
-CSCI E-50 (Formerly E-52), and/or CSCI E-28 (Unix Systems Programming)
-(Formerly CSCI E-215) or equivalents (specify which)?
+Occupation (If an undergraduate student, please specify your major and
+year and at which school; If a graduate student, please specify your
+department, field, and year and at which school).
 
 
-Have you taken CSCI E-22 (Data Structures) (Formerly CSCI E-119)?
+Have you taken:
+  CSCI E-10a (Formerly CSCI E-50a) (Introduction to Computer Science
+      Using Java I),
+  CSCI E-10b (Formerly CSCI E-50b) (Introduction to Computer Science
+      Using Java II),
+  CSCI E-22 (Formerly CSCI E-119) (Data Structures),
+  CSCI E-26 (Introduction to C, Unix/Linux Programming, and Web Interfaces),
+  CSCI E-28 (Formerly CSCI E-215) (Unix/Linux Systems Programming),
+  CSCI E-38 (Introduction to C++ for Programmers),
+  CSCI E-50 (Formerly CSCI E-52) (Intensive Introduction to Computer Science),
+  CSCI E-53 (Effective C++ for Programmers),
+  CSCI E-61 (Systems Programming and Machine Organization),
+  ENSC E-123 or CSCI E-123 (Laboratory Electronics: Digital Circuit
+      Design),
+  PHYS E-123a (Laboratory Electronics: Analog Circuit Design),
+  CSCI E-124 (Data Structures and Algorithms),
+  CSCI E-152 (Programming Languages),
+  or equivalents?  Please specify which?
 
-	If not, how do you meet the prerequisite?
+
+If you have not taken CSCI E-22 (Formerly CSCI E-119) (Data
+Structures) or CSCI E-124 (Data Structures and Algorithms), how do you
+meet the prerequisite?
 
 
-Have you taken CSCI E-124 (Data Structures and Algorithms)?
+If you have not taken CSCI E-124 (Data Structures and Algorithms), do
+you have experience implementing many different data structures from
+scratch?  If yes, please describe.  If not, how do you meet the
+prerequisite?
 
-	If not, how do you meet the prerequisite?
+
+Are you currently working toward a degree in a degree program?  If so,
+which program and what degree?
+
+
+Are you taking any other classes concurrently with this one?
+
+
+Do you have experience using Unix?  Do you have experience programming
+using Unix system calls?  If yes, please describe.
 
 
 Are you already registered for this class?  -- If not, do you intend
-to register?
+to register?  Also, are you registered as a distance student?  Do you
+intend to attend classes in person?
+
+
+This class has a proctored midterm exam.  Distance students are
+required to make arrangements for a proctor.  See
+https://www.extension.harvard.edu/resources-policies/exams-grades-transcripts/exams-online-courses
+for information about proctors.  If you live within the six-state New
+England area (Connecticut, Maine, Massachusetts, New Hampshire, Rhode
+Island, and Vermont) you must come to campus to take your exam.  Are
+you taking the midterm exam on campus?  If not, have you already made
+arrangements for a proctor?
+
+
+Are you taking the course for undergraduate credit, graduate credit,
+or noncredit?
 
 
 What additional appropriate course or work experience do you have?
@@ -44,19 +91,25 @@ What is your math background?
 
 
 What computer languages do you know (please include assembler and
-high-level languages)?
+high-level languages)?  Have you programmed in the C Programming
+Language, C++, or Java?
 
 
-What operating systems have you used?
+What operating systems have you used (e.g. Windows, Mac OS, Linux,
+iOS, Android, etc.)?
 
 
-What computers have you used?
+What computers have you used (i.e., which machine language instruction
+sets)?
 
 
-Why are you taking the course?
+What is your motivation for taking this course?
 
 
 If the class needs to be rescheduled, is Thursday evening acceptable?
 
 
-Other comments (please continue on the back):
+Other comments:
+
+
+			Last revised 10-Jan-18
