@@ -1,21 +1,25 @@
-			    Questionnaire
+      Last revised 1-Sep-20
 
-		 Harvard Extension School CSCI E-95:
-		  Compiler Design and Implementation
+          Questionnaire
 
-			     Spring 2018
+   Harvard Extension School CSCI E-95: Compiler Design
+        and Implementation
+
+            Fall 2020
 
 
-Name:				Home phone number:
-				Cellular phone number:
-E-mail:				Work phone number:
+Name:       Home/Cellular phone number:
+
+
+E-mail:       Work phone number:
 
 
 Where are you located?  What is your time zone?
 
 
-So that we can meet on-line, what is your Skype name and/or your
-Google Hangouts name?  And, which do you prefer to use?
+So that we can meet on-line, if necessary, what is your Google
+Hangouts name and/or your Skype name?  And, which do you prefer to
+use?
 
 
 Occupation (If an undergraduate student, please specify your major and
@@ -61,27 +65,17 @@ which program and what degree?
 Are you taking any other classes concurrently with this one?
 
 
+Do you have experience implementing many different data structures
+from scratch?  If yes, please describe.  If not, how do you meet the
+prerequisite?
+
+
 Do you have experience using Unix?  Do you have experience programming
 using Unix system calls?  If yes, please describe.
 
 
-Are you already registered for this class?  -- If not, do you intend
-to register?  Also, are you registered as a distance student?  Do you
-intend to attend classes in person?
-
-
-This class has a proctored midterm exam.  Distance students are
-required to make arrangements for a proctor.  See
-https://www.extension.harvard.edu/resources-policies/exams-grades-transcripts/exams-online-courses
-for information about proctors.  If you live within the six-state New
-England area (Connecticut, Maine, Massachusetts, New Hampshire, Rhode
-Island, and Vermont) you must come to campus to take your exam.  Are
-you taking the midterm exam on campus?  If not, have you already made
-arrangements for a proctor?
-
-
-Are you taking the course for undergraduate credit, graduate credit,
-or noncredit?
+Do you have experience using Windows?  If so, as a user or as a
+programmer?
 
 
 What additional appropriate course or work experience do you have?
@@ -106,10 +100,5 @@ sets)?
 What is your motivation for taking this course?
 
 
-If the class needs to be rescheduled, is Thursday evening acceptable?
-
-
 Other comments:
 
-
-			Last revised 10-Jan-18
