@@ -23,6 +23,8 @@
   /* Suppress compiler warnings about unused variables and functions. */
   #define YY_EXIT_FAILURE ((void)yyscanner, 2)
   #define YY_NO_INPUT
+  /* suppress sign-compare warnings until flex version 2.6.3 */
+  #pragma GCC diagnostic ignored "-Wsign-compare"
 
   /* Track locations. */
   #define YY_EXTRA_TYPE int
