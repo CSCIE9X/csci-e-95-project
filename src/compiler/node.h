@@ -19,7 +19,7 @@ enum node_kind {
   NODE_BINARY_OPERATION,
   NODE_EXPRESSION_STATEMENT,
   NODE_STATEMENT_LIST,
-  NODE_NULL_STATEMENT
+  NODE_ERROR_STATEMENT
 };
 struct node {
   enum node_kind kind;
@@ -66,10 +66,10 @@ struct node *node_binary_operation(YYLTYPE location, enum node_binary_operation 
                                    struct node *left_operand, struct node *right_operand);
 struct node *node_expression_statement(YYLTYPE location, struct node *expression);
 struct node *node_statement_list(YYLTYPE location, struct node *init, struct node *statement);
-struct node *node_null_statement(YYLTYPE location);
+struct node *node_error_statement(YYLTYPE location);
 
 struct result *node_get_result(struct node *expression);
 
-void node_print_statement_list(FILE *output, struct node *statement_list);
+void node_print_any(FILE *output, struct node *node);
 
 #endif

@@ -101,35 +101,12 @@ static void ir_operand_copy(struct ir_instruction *instruction, int position, st
 /*******************************
  * GENERATE IR FOR EXPRESSIONS *
  *******************************/
-static void ir_generate_for_number(struct node *number) {
-  struct ir_instruction *instruction;
-  assert(NODE_NUMBER == number->kind);
-
-  instruction = ir_instruction(IR_LOAD_IMMEDIATE);
-  ir_operand_temporary(instruction, 0);
-  ir_operand_number(instruction, 1, number);
-
-  number->ir = ir_section(instruction, instruction);
-
-  number->data.number.result.ir_operand = &instruction->operands[0];
-}
-
-static void ir_generate_for_identifier(struct node *identifier) {
-  struct ir_instruction *instruction;
-  assert(NODE_IDENTIFIER == identifier->kind);
-  instruction = ir_instruction(IR_NO_OPERATION);
-  identifier->ir = ir_section(instruction, instruction);
-  assert(NULL != identifier->data.identifier.symbol->result.ir_operand);
-}
-
-static void ir_generate_for_expression(struct node *expression);
-
-static void ir_generate_for_arithmetic_binary_operation(enum ir_instruction_kind kind, struct node *binary_operation) {
+static void ir_generate_for_arithmetic_binary_operation(struct ir_context *context, enum ir_instruction_kind kind, struct node *binary_operation) {
   struct ir_instruction *instruction;
   assert(NODE_BINARY_OPERATION == binary_operation->kind);
 
-  ir_generate_for_expression(binary_operation->data.binary_operation.left_operand);
-  ir_generate_for_expression(binary_operation->data.binary_operation.right_operand);
+  ir_generate(context, binary_operation->data.binary_operation.left_operand);
+  ir_generate(context, binary_operation->data.binary_operation.right_operand);
 
   instruction = ir_instruction(kind);
   ir_operand_temporary(instruction, 0);
@@ -142,12 +119,12 @@ static void ir_generate_for_arithmetic_binary_operation(enum ir_instruction_kind
   binary_operation->data.binary_operation.result.ir_operand = &instruction->operands[0];
 }
 
-static void ir_generate_for_simple_assignment(struct node *binary_operation) {
+static void ir_generate_for_simple_assignment(struct ir_context *context, struct node *binary_operation) {
   struct ir_instruction *instruction;
   struct node *left;
   assert(NODE_BINARY_OPERATION == binary_operation->kind);
 
-  ir_generate_for_expression(binary_operation->data.binary_operation.right_operand);
+  ir_generate(context, binary_operation->data.binary_operation.right_operand);
 
   left = binary_operation->data.binary_operation.left_operand;
   assert(NODE_IDENTIFIER == left->kind);
@@ -167,85 +144,89 @@ static void ir_generate_for_simple_assignment(struct node *binary_operation) {
   binary_operation->data.binary_operation.result.ir_operand = &instruction->operands[0];
 }
 
-static void ir_generate_for_binary_operation(struct node *binary_operation) {
-  assert(NODE_BINARY_OPERATION == binary_operation->kind);
+void ir_generate(struct ir_context *context, struct node * node) {
+    if (!node) return;
+    switch (node->kind) {
+        case NODE_BINARY_OPERATION: {
+            switch (node->data.binary_operation.operation) {
+                case BINOP_MULTIPLICATION:
+                    ir_generate_for_arithmetic_binary_operation(context, IR_MULTIPLY, node);
+                    break;
 
-  switch (binary_operation->data.binary_operation.operation) {
-    case BINOP_MULTIPLICATION:
-      ir_generate_for_arithmetic_binary_operation(IR_MULTIPLY, binary_operation);
-      break;
+                case BINOP_DIVISION:
+                    ir_generate_for_arithmetic_binary_operation(context, IR_DIVIDE, node);
+                    break;
 
-    case BINOP_DIVISION:
-      ir_generate_for_arithmetic_binary_operation(IR_DIVIDE, binary_operation);
-      break;
+                case BINOP_ADDITION:
+                    ir_generate_for_arithmetic_binary_operation(context, IR_ADD, node);
+                    break;
 
-    case BINOP_ADDITION:
-      ir_generate_for_arithmetic_binary_operation(IR_ADD, binary_operation);
-      break;
+                case BINOP_SUBTRACTION:
+                    ir_generate_for_arithmetic_binary_operation(context, IR_SUBTRACT, node);
+                    break;
 
-    case BINOP_SUBTRACTION:
-      ir_generate_for_arithmetic_binary_operation(IR_SUBTRACT, binary_operation);
-      break;
+                case BINOP_ASSIGN:
+                    ir_generate_for_simple_assignment(context, node);
+                    break;
+                default:
+                    assert("unhandled binop in ir generation" && 0);
+            }
+            break;
+        }
+        case NODE_ERROR_STATEMENT: {
+            assert("shouldn't progress to types if there are errors in the parse tree" && 0);
+        }
+        case NODE_EXPRESSION_STATEMENT: {
+            struct ir_instruction *instruction;
+            struct node *expression = node->data.expression_statement.expression;
+            assert(NODE_EXPRESSION_STATEMENT == node->kind);
+            ir_generate(context, expression);
 
-    case BINOP_ASSIGN:
-      ir_generate_for_simple_assignment(binary_operation);
-      break;
+            instruction = ir_instruction(IR_PRINT_NUMBER);
+            ir_operand_copy(instruction, 0, node_get_result(expression)->ir_operand);
 
-    default:
-      assert(0);
-      break;
-  }
+            node->ir = ir_copy(node->data.expression_statement.expression->ir);
+            ir_append(node->ir, instruction);
+            break;
+        }
+        case NODE_IDENTIFIER: {
+            struct ir_instruction *instruction;
+            assert(NODE_IDENTIFIER == node->kind);
+            instruction = ir_instruction(IR_NO_OPERATION);
+            node->ir = ir_section(instruction, instruction);
+            assert(NULL != node->data.identifier.symbol->result.ir_operand);
+            break;
+        }
+        case NODE_NUMBER: {
+            struct ir_instruction *instruction;
+            assert(NODE_NUMBER == node->kind);
+
+            instruction = ir_instruction(IR_LOAD_IMMEDIATE);
+            ir_operand_temporary(instruction, 0);
+            ir_operand_number(instruction, 1, node);
+
+            node->ir = ir_section(instruction, instruction);
+
+            node->data.number.result.ir_operand = &instruction->operands[0];
+            break;
+        }
+        case NODE_STATEMENT_LIST: {
+            struct node *init = node->data.statement_list.init;
+            struct node *statement = node->data.statement_list.statement;
+
+            if (NULL != init) {
+                ir_generate(context, init);
+                ir_generate(context, statement);
+                node->ir = ir_concatenate(init->ir, statement->ir);
+            } else {
+                ir_generate(context, statement);
+                node->ir = statement->ir;
+            }
+            break;
+        }
+    }
 }
 
-static void ir_generate_for_expression(struct node *expression) {
-  switch (expression->kind) {
-    case NODE_IDENTIFIER:
-      ir_generate_for_identifier(expression);
-      break;
-
-    case NODE_NUMBER:
-      ir_generate_for_number(expression);
-      break;
-
-    case NODE_BINARY_OPERATION:
-      ir_generate_for_binary_operation(expression);
-      break;
-
-    default:
-      assert(0);
-      break;
-  }
-}
-
-static void ir_generate_for_expression_statement(struct node *expression_statement) {
-  struct ir_instruction *instruction;
-  struct node *expression = expression_statement->data.expression_statement.expression;
-  assert(NODE_EXPRESSION_STATEMENT == expression_statement->kind);
-  ir_generate_for_expression(expression);
-
-  instruction = ir_instruction(IR_PRINT_NUMBER);
-  ir_operand_copy(instruction, 0, node_get_result(expression)->ir_operand);
-
-  expression_statement->ir = ir_copy(expression_statement->data.expression_statement.expression->ir);
-  ir_append(expression_statement->ir, instruction);
-}
-
-int ir_generate_for_statement_list(struct node *statement_list) {
-  struct node *init = statement_list->data.statement_list.init;
-  struct node *statement = statement_list->data.statement_list.statement;
-
-  assert(NODE_STATEMENT_LIST == statement_list->kind);
-
-  if (NULL != init) {
-    ir_generate_for_statement_list(init);
-    ir_generate_for_expression_statement(statement);
-    statement_list->ir = ir_concatenate(init->ir, statement->ir);
-  } else {
-    ir_generate_for_expression_statement(statement);
-    statement_list->ir = statement->ir;
-  }
-  return 0;
-}
 
 /***********************
  * PRINT IR STRUCTURES *
@@ -304,8 +285,7 @@ static void ir_print_instruction(FILE *output, struct ir_instruction *instructio
     case IR_NO_OPERATION:
       break;
     default:
-      assert(0);
-      break;
+      assert("unhandled ir for printing" && 0);
   }
 }
 

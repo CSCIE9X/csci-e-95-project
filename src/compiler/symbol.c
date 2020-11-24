@@ -3,6 +3,7 @@
 #include <string.h>
 #include <assert.h>
 
+#include "compiler.h"
 #include "node.h"
 #include "symbol.h"
 
@@ -41,81 +42,46 @@ static struct symbol *symbol_put(struct symbol_table *table, char name[]) {
   return &symbol_list->symbol;
 }
 
-static int symbol_add_from_identifier(struct symbol_table *table, struct node *identifier, bool define) {
-  assert(NODE_IDENTIFIER == identifier->kind);
-
-  identifier->data.identifier.symbol = symbol_get(table, identifier->data.identifier.name);
-  if (NULL == identifier->data.identifier.symbol) {
-    if (define) {
-      identifier->data.identifier.symbol = symbol_put(table, identifier->data.identifier.name);
-    } else {
-      compiler_print_error(identifier->location, "undefined identifier %s", identifier->data.identifier.name);
-      return 1;
+void symbol_add_from_any(struct symbol_context *context, struct node * node) {
+    if (!node) return;
+    assert(context);
+    assert(context->table);
+    switch (node->kind) {
+        case NODE_BINARY_OPERATION: {
+            context->is_definition = node->data.binary_operation.left_operand && node->data.binary_operation.operation == BINOP_ASSIGN;
+            symbol_add_from_any(context, node->data.binary_operation.left_operand);
+            context->is_definition = false;
+            symbol_add_from_any(context, node->data.binary_operation.right_operand);
+            break;
+        }
+        case NODE_ERROR_STATEMENT: {
+            assert("shouldn't progress to symbols if there are errors in the parse tree" && 0);
+        }
+        case NODE_EXPRESSION_STATEMENT: {
+            symbol_add_from_any(context, node->data.expression_statement.expression);
+            break;
+        }
+        case NODE_IDENTIFIER: {
+            node->data.identifier.symbol = symbol_get(context->table, node->data.identifier.name);
+            if (NULL == node->data.identifier.symbol) {
+                if (context->is_definition) {
+                    node->data.identifier.symbol = symbol_put(context->table, node->data.identifier.name);
+                } else {
+                    context->error_count++;
+                    compiler_print_error(node->location, "undefined identifier %s", node->data.identifier.name);
+                }
+            }
+            break;
+        }
+        case NODE_NUMBER: {
+            break;
+        }
+        case NODE_STATEMENT_LIST: {
+            symbol_add_from_any(context, node->data.statement_list.init);
+            symbol_add_from_any(context, node->data.statement_list.statement);
+            break;
+        }
     }
-  }
-  return 0;
-
-}
-
-static int symbol_add_from_expression(struct symbol_table *table, struct node *expression);
-
-static int symbol_add_from_binary_operation(struct symbol_table *table, struct node *binary_operation) {
-  assert(NODE_BINARY_OPERATION == binary_operation->kind);
-
-  switch (binary_operation->data.binary_operation.operation) {
-    case BINOP_MULTIPLICATION:
-    case BINOP_DIVISION:
-    case BINOP_ADDITION:
-    case BINOP_SUBTRACTION:
-      return symbol_add_from_expression(table, binary_operation->data.binary_operation.left_operand)
-           + symbol_add_from_expression(table, binary_operation->data.binary_operation.right_operand);
-    case BINOP_ASSIGN:
-      if (NODE_IDENTIFIER == binary_operation->data.binary_operation.left_operand->kind) {
-        return symbol_add_from_identifier(table, binary_operation->data.binary_operation.left_operand, true)
-             + symbol_add_from_expression(table, binary_operation->data.binary_operation.right_operand);
-      } else {
-        compiler_print_error(binary_operation->data.binary_operation.left_operand->location,
-                             "left operand of assignment must be an identifier");
-        return 1
-             + symbol_add_from_expression(table, binary_operation->data.binary_operation.left_operand)
-             + symbol_add_from_expression(table, binary_operation->data.binary_operation.right_operand);
-      }
-    default:
-      assert(0);
-      return 1;
-  }
-}
-
-static int symbol_add_from_expression(struct symbol_table *table, struct node *expression) {
-  switch (expression->kind) {
-    case NODE_BINARY_OPERATION:
-      return symbol_add_from_binary_operation(table, expression);
-    case NODE_IDENTIFIER:
-      return symbol_add_from_identifier(table, expression, false);
-    case NODE_NUMBER:
-      return 0;
-    default:
-      assert(0);
-      return 1;
-  }
-}
-
-static int symbol_add_from_expression_statement(struct symbol_table *table, struct node *expression_statement) {
-  assert(NODE_EXPRESSION_STATEMENT == expression_statement->kind);
-
-  return symbol_add_from_expression(table, expression_statement->data.expression_statement.expression);
-}
-
-int symbol_add_from_statement_list(struct symbol_table *table, struct node *statement_list)
-{
-  int error_count = 0;
-  assert(NODE_STATEMENT_LIST == statement_list->kind);
-
-  if (NULL != statement_list->data.statement_list.init) {
-    error_count += symbol_add_from_statement_list(table, statement_list->data.statement_list.init);
-  }
-  return error_count
-       + symbol_add_from_expression_statement(table, statement_list->data.statement_list.statement);
 }
 
 /***********************

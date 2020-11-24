@@ -54,23 +54,23 @@ number          {digit}+
 {ws}        /* do nothing */
 
   /* operators begin */
-\*          return ASTERISK;
-\+          return PLUS;
--           return MINUS;
-\/          return SLASH;
-\=          return EQUAL;
+\*          return ASTERISK_T;
+\+          return PLUS_T;
+-           return MINUS_T;
+\/          return SLASH_T;
+\=          return EQUAL_T;
 
-\(          return LEFT_PAREN;
-\)          return RIGHT_PAREN;
-;           return SEMICOLON;
+\(          return LEFT_PAREN_T;
+\)          return RIGHT_PAREN_T;
+;           return SEMICOLON_T;
   /* operators end */
 
   /* constants begin */
-{number}    *yylval = node_number(*yylloc, yytext); return NUMBER;
+{number}    *yylval = node_number(*yylloc, yytext); return NUMBER_T;
   /* constants end */
 
   /* identifiers */
-{id}        *yylval = node_identifier(*yylloc, yytext, yyleng); return IDENTIFIER;
+{id}        *yylval = node_identifier(*yylloc, yytext, yyleng); return IDENTIFIER_T;
 
 .           return -1;
 
@@ -118,7 +118,7 @@ void scanner_print_tokens(FILE *output, int *error_count, yyscan_t scanner) {
       fprintf(output, "     token = [%-20s]", parser_token_name(token));
 
       switch (token) {
-        case NUMBER:
+        case NUMBER_T:
           /* Print the type and value. */
           fputs("     type = ", output);
           type_print(output, val->data.number.result.type);
@@ -129,7 +129,7 @@ void scanner_print_tokens(FILE *output, int *error_count, yyscan_t scanner) {
           }
           break;
 
-        case IDENTIFIER:
+        case IDENTIFIER_T:
           fprintf(output, "     name = %s", val->data.identifier.name);
           break;
       }

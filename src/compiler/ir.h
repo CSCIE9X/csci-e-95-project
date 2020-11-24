@@ -41,7 +41,10 @@ struct ir_section {
   struct ir_instruction *first, *last;
 };
 
-int ir_generate_for_statement_list(struct node *statement_list);
+struct ir_context {
+    int error_count;
+};
+void ir_generate(struct ir_context *context, struct node *node);
 
 void ir_print_section(FILE *output, struct ir_section *section);
 
