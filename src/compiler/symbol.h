@@ -31,7 +31,7 @@ struct symbol_context {
 };
 
 void symbol_initialize_table(struct symbol_table *table);
-void symbol_add_from_any(struct symbol_context *context, struct node *node);
+void symbol_ast_traversal(struct symbol_context *context, struct node *node);
 void symbol_print_table(FILE *output, struct symbol_table *table);
 
 #endif /* _SYMBOL_H */

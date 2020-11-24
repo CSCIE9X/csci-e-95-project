@@ -60,12 +60,12 @@ static void type_convert_assignment(struct node *binary_operation) {
     node_get_result(binary_operation->data.binary_operation.left_operand)->type;
 }
 
-void type_check(struct type_context *context, struct node * node) {
+void type_ast_traversal(struct type_context *context, struct node * node) {
     if (!node) return;
     switch (node->kind) {
         case NODE_BINARY_OPERATION: {
-            type_check(context, node->data.binary_operation.left_operand);
-            type_check(context, node->data.binary_operation.right_operand);
+            type_ast_traversal(context, node->data.binary_operation.left_operand);
+            type_ast_traversal(context, node->data.binary_operation.right_operand);
             switch (node->data.binary_operation.operation) {
                 case BINOP_MULTIPLICATION:
                 case BINOP_DIVISION:
@@ -85,7 +85,7 @@ void type_check(struct type_context *context, struct node * node) {
             assert("shouldn't progress to types if there are errors in the parse tree" && 0);
         }
         case NODE_EXPRESSION_STATEMENT: {
-            type_check(context, node->data.expression_statement.expression);
+            type_ast_traversal(context, node->data.expression_statement.expression);
             break;
         }
         case NODE_IDENTIFIER: {
@@ -99,8 +99,8 @@ void type_check(struct type_context *context, struct node * node) {
             break;
         }
         case NODE_STATEMENT_LIST: {
-            type_check(context, node->data.statement_list.init);
-            type_check(context, node->data.statement_list.statement);
+            type_ast_traversal(context, node->data.statement_list.init);
+            type_ast_traversal(context, node->data.statement_list.statement);
             break;
         }
     }

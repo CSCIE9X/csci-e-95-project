@@ -127,7 +127,7 @@ struct result *node_get_result(struct node *expression) {
  * PRINT PARSE TREE NODES *
  **************************/
 
-void node_print_any(FILE *output, struct node *node) {
+void print_ast_traversal(FILE *output, struct node *node) {
     assert(node);
     assert(output);
     switch (node->kind) {
@@ -144,11 +144,11 @@ void node_print_any(FILE *output, struct node *node) {
             assert(NODE_BINARY_OPERATION == node->kind);
 
             fputs("(", output);
-            node_print_any(output, node->data.binary_operation.left_operand);
+            print_ast_traversal(output, node->data.binary_operation.left_operand);
             fputs(" ", output);
             fputs(binary_operators[node->data.binary_operation.operation], output);
             fputs(" ", output);
-            node_print_any(output, node->data.binary_operation.right_operand);
+            print_ast_traversal(output, node->data.binary_operation.right_operand);
             fputs(")", output);
             break;
         }
@@ -157,7 +157,7 @@ void node_print_any(FILE *output, struct node *node) {
             break;
         }
         case NODE_EXPRESSION_STATEMENT: {
-            node_print_any(output, node->data.expression_statement.expression);
+            print_ast_traversal(output, node->data.expression_statement.expression);
             fputs(";\n", output);
             break;
         }
@@ -176,9 +176,9 @@ void node_print_any(FILE *output, struct node *node) {
         }
         case NODE_STATEMENT_LIST: {
             if (NULL != node->data.statement_list.init) {
-                node_print_any(output, node->data.statement_list.init);
+                print_ast_traversal(output, node->data.statement_list.init);
             }
-            node_print_any(output, node->data.statement_list.statement);
+            print_ast_traversal(output, node->data.statement_list.statement);
             break;
         }
     }

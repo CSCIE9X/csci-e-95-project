@@ -42,23 +42,23 @@ static struct symbol *symbol_put(struct symbol_table *table, char name[]) {
   return &symbol_list->symbol;
 }
 
-void symbol_add_from_any(struct symbol_context *context, struct node * node) {
+void symbol_ast_traversal(struct symbol_context *context, struct node * node) {
     if (!node) return;
     assert(context);
     assert(context->table);
     switch (node->kind) {
         case NODE_BINARY_OPERATION: {
             context->is_definition = node->data.binary_operation.left_operand && node->data.binary_operation.operation == BINOP_ASSIGN;
-            symbol_add_from_any(context, node->data.binary_operation.left_operand);
+            symbol_ast_traversal(context, node->data.binary_operation.left_operand);
             context->is_definition = false;
-            symbol_add_from_any(context, node->data.binary_operation.right_operand);
+            symbol_ast_traversal(context, node->data.binary_operation.right_operand);
             break;
         }
         case NODE_ERROR_STATEMENT: {
             assert("shouldn't progress to symbols if there are errors in the parse tree" && 0);
         }
         case NODE_EXPRESSION_STATEMENT: {
-            symbol_add_from_any(context, node->data.expression_statement.expression);
+            symbol_ast_traversal(context, node->data.expression_statement.expression);
             break;
         }
         case NODE_IDENTIFIER: {
@@ -77,8 +77,8 @@ void symbol_add_from_any(struct symbol_context *context, struct node * node) {
             break;
         }
         case NODE_STATEMENT_LIST: {
-            symbol_add_from_any(context, node->data.statement_list.init);
-            symbol_add_from_any(context, node->data.statement_list.statement);
+            symbol_ast_traversal(context, node->data.statement_list.init);
+            symbol_ast_traversal(context, node->data.statement_list.statement);
             break;
         }
     }

@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
     }
 
     if (0 == strcmp("parser", stage)) {
-        node_print_any(stdout, parse_tree);
+        print_ast_traversal(stdout, parse_tree);
         return 0;
     }
 
@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
     struct symbol_context context = {
             &symbol_table, false, error_count
     };
-    symbol_add_from_any(&context, parse_tree);
+    symbol_ast_traversal(&context, parse_tree);
     error_count = context.error_count;
     if (error_count > 0) {
         print_errors_from_pass("Symbol table", error_count);
@@ -102,24 +102,24 @@ int main(int argc, char **argv) {
         fprintf(stdout, "================= SYMBOLS ================\n");
         symbol_print_table(stdout, &symbol_table);
         fprintf(stdout, "=============== PARSE TREE ===============\n");
-        node_print_any(stdout, parse_tree);
+        print_ast_traversal(stdout, parse_tree);
         return 0;
     }
 
     struct type_context type_context = {0};
-    type_check(&type_context, parse_tree);
+    type_ast_traversal(&type_context, parse_tree);
     error_count = type_context.error_count;
     if (error_count > 0) {
         print_errors_from_pass("Type checking", error_count);
         return 1;
     }
     if (0 == strcmp("type", stage)) {
-        node_print_any(stdout, parse_tree);
+        print_ast_traversal(stdout, parse_tree);
         return 0;
     }
 
     struct ir_context ir_context = { 0 };
-    ir_generate(&ir_context, parse_tree);
+    ir_ast_traversal(&ir_context, parse_tree);
     error_count = ir_context.error_count;
     if (error_count > 0) {
         print_errors_from_pass("IR generation", error_count);

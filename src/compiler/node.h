@@ -70,6 +70,6 @@ struct node *node_error_statement(YYLTYPE location);
 
 struct result *node_get_result(struct node *expression);
 
-void node_print_any(FILE *output, struct node *node);
+void print_ast_traversal(FILE *output, struct node *node);
 
 #endif

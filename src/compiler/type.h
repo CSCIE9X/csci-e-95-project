@@ -39,6 +39,6 @@ void type_print(FILE *output, struct type *type);
 struct type_context {
     int error_count;
 };
-void type_check(struct type_context *context, struct node * node);
+void type_ast_traversal(struct type_context *context, struct node * node);
 
 #endif /* _TYPE_H */

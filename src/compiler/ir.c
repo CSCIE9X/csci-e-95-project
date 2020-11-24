@@ -105,8 +105,8 @@ static void ir_generate_for_arithmetic_binary_operation(struct ir_context *conte
   struct ir_instruction *instruction;
   assert(NODE_BINARY_OPERATION == binary_operation->kind);
 
-  ir_generate(context, binary_operation->data.binary_operation.left_operand);
-  ir_generate(context, binary_operation->data.binary_operation.right_operand);
+    ir_ast_traversal(context, binary_operation->data.binary_operation.left_operand);
+    ir_ast_traversal(context, binary_operation->data.binary_operation.right_operand);
 
   instruction = ir_instruction(kind);
   ir_operand_temporary(instruction, 0);
@@ -124,7 +124,7 @@ static void ir_generate_for_simple_assignment(struct ir_context *context, struct
   struct node *left;
   assert(NODE_BINARY_OPERATION == binary_operation->kind);
 
-  ir_generate(context, binary_operation->data.binary_operation.right_operand);
+    ir_ast_traversal(context, binary_operation->data.binary_operation.right_operand);
 
   left = binary_operation->data.binary_operation.left_operand;
   assert(NODE_IDENTIFIER == left->kind);
@@ -144,7 +144,7 @@ static void ir_generate_for_simple_assignment(struct ir_context *context, struct
   binary_operation->data.binary_operation.result.ir_operand = &instruction->operands[0];
 }
 
-void ir_generate(struct ir_context *context, struct node * node) {
+void ir_ast_traversal(struct ir_context *context, struct node * node) {
     if (!node) return;
     switch (node->kind) {
         case NODE_BINARY_OPERATION: {
@@ -180,7 +180,7 @@ void ir_generate(struct ir_context *context, struct node * node) {
             struct ir_instruction *instruction;
             struct node *expression = node->data.expression_statement.expression;
             assert(NODE_EXPRESSION_STATEMENT == node->kind);
-            ir_generate(context, expression);
+            ir_ast_traversal(context, expression);
 
             instruction = ir_instruction(IR_PRINT_NUMBER);
             ir_operand_copy(instruction, 0, node_get_result(expression)->ir_operand);
@@ -215,11 +215,11 @@ void ir_generate(struct ir_context *context, struct node * node) {
             struct node *statement = node->data.statement_list.statement;
 
             if (NULL != init) {
-                ir_generate(context, init);
-                ir_generate(context, statement);
+                ir_ast_traversal(context, init);
+                ir_ast_traversal(context, statement);
                 node->ir = ir_concatenate(init->ir, statement->ir);
             } else {
-                ir_generate(context, statement);
+                ir_ast_traversal(context, statement);
                 node->ir = statement->ir;
             }
             break;

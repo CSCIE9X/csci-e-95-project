@@ -44,7 +44,7 @@ struct ir_section {
 struct ir_context {
     int error_count;
 };
-void ir_generate(struct ir_context *context, struct node *node);
+void ir_ast_traversal(struct ir_context *context, struct node *node);
 
 void ir_print_section(FILE *output, struct ir_section *section);
 

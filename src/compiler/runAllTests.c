@@ -47,7 +47,7 @@ static void print_and_assert(struct node *parse_tree, char *expected, char* buff
     FILE *readMe = fdopen(fds[0], "r");
     FILE *writeMe = fdopen(fds[1], "w");
 
-    node_print_any(writeMe, parse_tree);
+    print_ast_traversal(writeMe, parse_tree);
     fclose(writeMe);
 
     fread(buff, sizeof(char), buffLen, readMe);
@@ -150,7 +150,7 @@ static int symbol_helper(char * source, struct symbol_table *symbol_table) {
             symbol_table, false, 0
     };
     struct node *parse_tree = parse_helper(source);
-    symbol_add_from_any(&context, parse_tree);
+    symbol_ast_traversal(&context, parse_tree);
     return context.error_count;
 }
 
