@@ -121,6 +121,7 @@ struct node *parser_create_tree(int *error_count, yyscan_t scanner) {
     fprintf(stdout, "Parser ran out of memory.\n");
     return NULL;
   } else {
+    ast_traversal(NULL, parse_tree, &assign_parent);
     return parse_tree;
   }
 }

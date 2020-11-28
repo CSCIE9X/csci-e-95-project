@@ -87,6 +87,14 @@ int main(int argc, char **argv) {
         return 0;
     }
 
+    if (0 == strcmp("puml", stage)) {
+        struct puml_context context = {
+                0, stdout
+        };
+        ast_traversal(&context, parse_tree, &puml_printer);
+        return 0;
+    }
+
     symbol_initialize_table(&symbol_table);
     error_count = 0;
     struct symbol_context context = {
