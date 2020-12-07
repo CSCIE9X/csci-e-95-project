@@ -91,7 +91,7 @@ int main(int argc, char **argv) {
         struct puml_context context = {
                 0, stdout
         };
-        ast_traversal(&context, parse_tree, &puml_printer);
+        ast_traversal(&context, parse_tree, (traversal_callback) puml_printer);
         return 0;
     }
 

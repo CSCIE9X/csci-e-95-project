@@ -20,6 +20,7 @@
 
   #include "compiler.h"
   #include "parser.tab.h"
+  #include "scanner.yy.h"
   #include "node.h"
 
   #define YYERROR_VERBOSE

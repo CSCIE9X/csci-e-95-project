@@ -92,6 +92,6 @@ struct puml_context {
     FILE *output;
 };
 
-void *puml_printer(struct node *node, bool entering, void *context, void *left, void *right);
+void *puml_printer(struct node *node, bool entering, void *context);
 
 #endif

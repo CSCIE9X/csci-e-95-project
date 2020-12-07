@@ -220,7 +220,7 @@ void * ast_traversal(
     return callback(node, EXITING, context, left, right);
 }
 
-void * assign_parent(struct node *node, bool entering, void * context, void * left, void * right) {
+void * assign_parent(struct node *node, bool entering, void * __unused context, void * left, void * right) {
     if (entering) {
         return NULL;
     }
@@ -244,7 +244,7 @@ static void emitNodeRelation(FILE *output, const char *relation, struct node *sr
     fprintf(output, "(node_%d) --> (node_%d) : %s\n", src->puml_id, target->puml_id, relation);
 }
 
-void * puml_printer(struct node *node, bool entering, void * context, void * left, void * right) {
+void * puml_printer(struct node *node, bool entering, void * context) {
     if (!node) {
         return NULL;
     }
