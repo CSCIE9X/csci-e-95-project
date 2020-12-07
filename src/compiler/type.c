@@ -11,15 +11,15 @@
  ***************************/
 
 struct type *type_basic(bool is_unsigned, enum type_basic_kind datatype) {
-  struct type *basic;
+    struct type *basic;
 
-  basic = malloc(sizeof(struct type));
-  assert(NULL != basic);
+    basic = malloc(sizeof(struct type));
+    assert(NULL != basic);
 
-  basic->kind = TYPE_BASIC;
-  basic->data.basic.is_unsigned = is_unsigned;
-  basic->data.basic.datatype = datatype;
-  return basic;
+    basic->kind = TYPE_BASIC;
+    basic->data.basic.is_unsigned = is_unsigned;
+    basic->data.basic.datatype = datatype;
+    return basic;
 }
 
 /****************************************
@@ -27,17 +27,17 @@ struct type *type_basic(bool is_unsigned, enum type_basic_kind datatype) {
  ****************************************/
 
 static bool type_is_equal(struct type *left, struct type *right) {
-  if (left->kind == right->kind) {
-    switch (left->kind) {
-      case TYPE_BASIC:
-        return left->data.basic.is_unsigned == right->data.basic.is_unsigned
-            && left->data.basic.datatype == right->data.basic.datatype;
-      default:
-        assert("only basic types support for calc" && 0);
+    if (left->kind == right->kind) {
+        switch (left->kind) {
+            case TYPE_BASIC:
+                return left->data.basic.is_unsigned == right->data.basic.is_unsigned
+                       && left->data.basic.datatype == right->data.basic.datatype;
+            default:
+                assert("only basic types support for calc" && 0);
+        }
+    } else {
+        return false;
     }
-  } else {
-    return false;
-  }
 }
 
 /*****************
@@ -45,22 +45,22 @@ static bool type_is_equal(struct type *left, struct type *right) {
  *****************/
 
 static void type_convert_usual_binary(struct node *binary_operation) {
-  assert(NODE_BINARY_OPERATION == binary_operation->kind);
-  assert(type_is_equal(node_get_result(binary_operation->data.binary_operation.left_operand)->type,
-                       node_get_result(binary_operation->data.binary_operation.right_operand)->type));
-  binary_operation->data.binary_operation.result.type =
-    node_get_result(binary_operation->data.binary_operation.left_operand)->type;
+    assert(NODE_BINARY_OPERATION == binary_operation->kind);
+    assert(type_is_equal(node_get_result(binary_operation->data.binary_operation.left_operand)->type,
+                         node_get_result(binary_operation->data.binary_operation.right_operand)->type));
+    binary_operation->data.binary_operation.result.type =
+            node_get_result(binary_operation->data.binary_operation.left_operand)->type;
 }
 
 static void type_convert_assignment(struct node *binary_operation) {
-  assert(NODE_BINARY_OPERATION == binary_operation->kind);
-  assert(type_is_equal(node_get_result(binary_operation->data.binary_operation.left_operand)->type,
-                       node_get_result(binary_operation->data.binary_operation.right_operand)->type));
-  binary_operation->data.binary_operation.result.type =
-    node_get_result(binary_operation->data.binary_operation.left_operand)->type;
+    assert(NODE_BINARY_OPERATION == binary_operation->kind);
+    assert(type_is_equal(node_get_result(binary_operation->data.binary_operation.left_operand)->type,
+                         node_get_result(binary_operation->data.binary_operation.right_operand)->type));
+    binary_operation->data.binary_operation.result.type =
+            node_get_result(binary_operation->data.binary_operation.left_operand)->type;
 }
 
-void type_ast_traversal(struct type_context *context, struct node * node) {
+void type_ast_traversal(struct type_context *context, struct node *node) {
     if (!node) return;
     switch (node->kind) {
         case NODE_BINARY_OPERATION: {
@@ -68,10 +68,17 @@ void type_ast_traversal(struct type_context *context, struct node * node) {
             type_ast_traversal(context, node->data.binary_operation.right_operand);
             switch (node->data.binary_operation.operation) {
                 case BINOP_MULTIPLICATION:
-                case BINOP_DIVISION:
                 case BINOP_ADDITION:
                 case BINOP_SUBTRACTION:
                     type_convert_usual_binary(node);
+                    break;
+                case BINOP_DIVISION:
+                    type_convert_usual_binary(node);
+                    if (node->data.binary_operation.right_operand->kind == NODE_NUMBER &&
+                        node->data.binary_operation.right_operand->data.number.value == 0) {
+                        context->error_count++;
+                        compiler_print_error(node->location, "Division by zero");
+                    }
                     break;
                 case BINOP_ASSIGN:
                     type_convert_assignment(node);
@@ -112,34 +119,34 @@ void type_ast_traversal(struct type_context *context, struct node * node) {
  **************************/
 
 static void type_print_basic(FILE *output, struct type *basic) {
-  assert(TYPE_BASIC == basic->kind);
+    assert(TYPE_BASIC == basic->kind);
 
-  if (basic->data.basic.is_unsigned) {
-    fputs("unsigned", output);
-  } else {
-    fputs("  signed", output);
-  }
+    if (basic->data.basic.is_unsigned) {
+        fputs("unsigned", output);
+    } else {
+        fputs("  signed", output);
+    }
 
-  switch (basic->data.basic.datatype) {
-    case TYPE_BASIC_INT:
-      fputs("  int", output);
-      break;
-    case TYPE_BASIC_LONG:
-      fputs(" long", output);
-      break;
-    default:
-      assert(0);
-  }
+    switch (basic->data.basic.datatype) {
+        case TYPE_BASIC_INT:
+            fputs("  int", output);
+            break;
+        case TYPE_BASIC_LONG:
+            fputs(" long", output);
+            break;
+        default:
+            assert(0);
+    }
 }
 
 void type_print(FILE *output, struct type *kind) {
-  assert(NULL != kind);
+    assert(NULL != kind);
 
-  switch (kind->kind) {
-    case TYPE_BASIC:
-      type_print_basic(output, kind);
-      break;
-    default:
-      assert("only basic types supported for printing" && 0);
-  }
+    switch (kind->kind) {
+        case TYPE_BASIC:
+            type_print_basic(output, kind);
+            break;
+        default:
+            assert("only basic types supported for printing" && 0);
+    }
 }

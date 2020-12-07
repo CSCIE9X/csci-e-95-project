@@ -20,7 +20,6 @@
 
   #include "compiler.h"
   #include "parser.tab.h"
-  #include "scanner.yy.h"
   #include "node.h"
 
   #define YYERROR_VERBOSE
@@ -41,17 +40,17 @@ additive_expr
   : multiplicative_expr
 
   | additive_expr PLUS_T multiplicative_expr
-          { $$ = node_binary_operation(yylloc, BINOP_ADDITION, $1, $3); }
+          { $$ = node_binary_operation(@2, BINOP_ADDITION, $1, $3); }
 
   | additive_expr MINUS_T multiplicative_expr
-          { $$ = node_binary_operation(yylloc, BINOP_SUBTRACTION, $1, $3); }
+          { $$ = node_binary_operation(@2, BINOP_SUBTRACTION, $1, $3); }
 ;
 
 assignment_expr
   : additive_expr
 
   | primary_expr EQUAL_T additive_expr
-          { $$ = node_binary_operation(yylloc, BINOP_ASSIGN, $1, $3); }
+          { $$ = node_binary_operation(@$, BINOP_ASSIGN, $1, $3); }
 ;
 
 expr
@@ -66,10 +65,10 @@ multiplicative_expr
   : primary_expr
 
   | multiplicative_expr ASTERISK_T primary_expr
-          { $$ = node_binary_operation(yylloc, BINOP_MULTIPLICATION, $1, $3); }
+          { $$ = node_binary_operation(@2, BINOP_MULTIPLICATION, $1, $3); }
 
   | multiplicative_expr SLASH_T primary_expr
-          { $$ = node_binary_operation(yylloc, BINOP_DIVISION, $1, $3); }
+          { $$ = node_binary_operation(@2, BINOP_DIVISION, $1, $3); }
 ;
 
 primary_expr
@@ -88,16 +87,16 @@ program
 
 statement
   : expr SEMICOLON_T
-          { $$ = node_expression_statement(yylloc, $1); }
+          { $$ = node_expression_statement(@$, $1); }
   | error SEMICOLON_T
-          { $$ = node_error_statement(yylloc); yyerrok; }
+          { $$ = node_error_statement(@$); yyerrok; }
 ;
 
 
 statement_list
   : statement
   | statement_list statement
-          { $$ = node_statement_list(yylloc, $1, $2); }
+          { $$ = node_statement_list(@$, $1, $2); }
 ;
 
 %%
