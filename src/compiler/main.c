@@ -30,6 +30,7 @@ static void print_errors_from_pass(char *pass, int error_count) {
  * -s : the name of the stage to stop after. Defaults to
  *      runs all of the stages.
  * -o : the name of the output file. Defaults to "output.s"
+ * -O : the optimization level. Defaults to 0 meaning no optimization is performed
  *
  * You should pass the name of the file to process or redirect stdin.
  */
@@ -45,16 +46,16 @@ int main(int argc, char **argv) {
 
     strncpy(output_name, "output.s", NAME_MAX + 1);
     stage = "mips";
-    while (-1 != (opt = getopt(argc, argv, "o:s:O:"))) {
+    while (-1 != (opt = getopt(argc, argv, "O:o:s:"))) {
         switch (opt) {
+            case 'O':
+                optlevel = (int) strtol(optarg, (char **)NULL, 10);
+                break;
             case 'o':
                 strncpy(output_name, optarg, NAME_MAX);
                 break;
             case 's':
                 stage = optarg;
-                break;
-            case 'O':
-                optlevel = (int) strtol(optarg, (char **)NULL, 10);
                 break;
         }
     }
