@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <limits.h>
+#include <assert.h>
 
 #include "compiler.h" // include is used, it provides def for YYSTYPE
 #include "parser.h"
@@ -11,6 +12,8 @@
 #include "type.h"
 #include "ir.h"
 #include "mips.h"
+
+#define DEBUG 0
 
 
 static void print_errors_from_pass(char *pass, int error_count) {
@@ -38,10 +41,11 @@ int main(int argc, char **argv) {
     yyscan_t scanner;
     struct node *parse_tree;
     int error_count;
+    int optlevel = 0;
 
     strncpy(output_name, "output.s", NAME_MAX + 1);
     stage = "mips";
-    while (-1 != (opt = getopt(argc, argv, "o:s:"))) {
+    while (-1 != (opt = getopt(argc, argv, "o:s:O:"))) {
         switch (opt) {
             case 'o':
                 strncpy(output_name, optarg, NAME_MAX);
@@ -49,8 +53,13 @@ int main(int argc, char **argv) {
             case 's':
                 stage = optarg;
                 break;
+            case 'O':
+                optlevel = (int) strtol(optarg, (char **)NULL, 10);
+                break;
         }
     }
+
+    assert(optlevel >= 0);
 
     /* Figure out whether we're using stdin/stdout or file in/file out. */
     if (optind >= argc) {
